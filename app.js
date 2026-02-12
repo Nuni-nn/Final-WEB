@@ -1,10 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const commentRoutes = require("./routes/commentRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes");
 
 const errorHandler = require("./middleware/errorHandler");
 
@@ -22,6 +26,9 @@ app.get("/", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/recipes", recipeRoutes);
+app.use("/categories", categoryRoutes);
+app.use("/comments", commentRoutes);
+app.use("/favorites", favoriteRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not Found" });

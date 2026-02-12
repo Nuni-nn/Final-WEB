@@ -8,6 +8,7 @@ const recipeSchema = new mongoose.Schema(
     steps: [{ type: String, trim: true }],
     cookTime: { type: Number, default: 0, min: 0 },
     isPublic: { type: Boolean, default: false },
+    categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category", default: null },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }

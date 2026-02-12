@@ -2,6 +2,7 @@ const express = require("express");
 const Joi = require("joi");
 
 const auth = require("../middleware/authMiddleware");
+const requireRole = require("../middleware/roleMiddleware");
 const validate = require("../middleware/validate");
 const recipeCtrl = require("../controllers/recipeController");
 
@@ -14,6 +15,7 @@ const recipeCreateSchema = Joi.object({
   steps: Joi.array().items(Joi.string().min(1).max(500)).default([]),
   cookTime: Joi.number().integer().min(0).max(10000).optional(),
   isPublic: Joi.boolean().optional(),
+  categoryId: Joi.string().hex().length(24).allow(null).optional(),
 });
 
 const recipeUpdateSchema = Joi.object({
@@ -23,6 +25,7 @@ const recipeUpdateSchema = Joi.object({
   steps: Joi.array().items(Joi.string().min(1).max(500)).optional(),
   cookTime: Joi.number().integer().min(0).max(10000).optional(),
   isPublic: Joi.boolean().optional(),
+  categoryId: Joi.string().hex().length(24).allow(null).optional(),
 }).min(1);
 
 router.post("/", auth, validate(recipeCreateSchema), recipeCtrl.createRecipe);
@@ -30,5 +33,6 @@ router.get("/", auth, recipeCtrl.getMyRecipes);
 router.get("/:id", auth, recipeCtrl.getRecipeById);
 router.put("/:id", auth, validate(recipeUpdateSchema), recipeCtrl.updateRecipe);
 router.delete("/:id", auth, recipeCtrl.deleteRecipe);
+router.delete("/:id/admin", auth, requireRole("admin"), recipeCtrl.adminDeleteRecipe);
 
 module.exports = router;

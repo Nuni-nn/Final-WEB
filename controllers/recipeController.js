@@ -2,7 +2,7 @@ const Recipe = require("../models/Recipe");
 
 exports.createRecipe = async (req, res, next) => {
   try {
-    const { title, description, ingredients, steps, cookTime, isPublic } = req.body;
+    const { title, description, ingredients, steps, cookTime, isPublic, categoryId } = req.body;
 
     const recipe = await Recipe.create({
       title,
@@ -11,6 +11,7 @@ exports.createRecipe = async (req, res, next) => {
       steps: Array.isArray(steps) ? steps : [],
       cookTime: cookTime ?? 0,
       isPublic: !!isPublic,
+      categoryId: categoryId || null,
       userId: req.user.id,
     });
 
@@ -22,7 +23,9 @@ exports.createRecipe = async (req, res, next) => {
 
 exports.getMyRecipes = async (req, res, next) => {
   try {
-    const recipes = await Recipe.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const recipes = await Recipe.find({ userId: req.user.id })
+      .sort({ createdAt: -1 })
+      .populate("categoryId", "name");
     res.json({ recipes });
   } catch (err) {
     next(err);
@@ -31,7 +34,7 @@ exports.getMyRecipes = async (req, res, next) => {
 
 exports.getRecipeById = async (req, res, next) => {
   try {
-    const recipe = await Recipe.findById(req.params.id);
+    const recipe = await Recipe.findById(req.params.id).populate("categoryId", "name");
     if (!recipe) return res.status(404).json({ message: "Recipe not found" });
 
     if (recipe.userId.toString() !== req.user.id) {
@@ -53,7 +56,7 @@ exports.updateRecipe = async (req, res, next) => {
       return res.status(403).json({ message: "Forbidden: Not your recipe" });
     }
 
-    const { title, description, ingredients, steps, cookTime, isPublic } = req.body;
+    const { title, description, ingredients, steps, cookTime, isPublic, categoryId } = req.body;
 
     if (title !== undefined) recipe.title = title;
     if (description !== undefined) recipe.description = description;
@@ -61,6 +64,7 @@ exports.updateRecipe = async (req, res, next) => {
     if (steps !== undefined) recipe.steps = steps;
     if (cookTime !== undefined) recipe.cookTime = cookTime;
     if (isPublic !== undefined) recipe.isPublic = isPublic;
+    if (categoryId !== undefined) recipe.categoryId = categoryId;
 
     await recipe.save();
 
@@ -81,6 +85,18 @@ exports.deleteRecipe = async (req, res, next) => {
 
     await Recipe.deleteOne({ _id: recipe._id });
     res.json({ message: "Recipe deleted" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.adminDeleteRecipe = async (req, res, next) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) return res.status(404).json({ message: "Recipe not found" });
+
+    await Recipe.deleteOne({ _id: recipe._id });
+    res.json({ message: "Recipe deleted by admin" });
   } catch (err) {
     next(err);
   }
