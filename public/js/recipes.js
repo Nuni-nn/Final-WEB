@@ -80,19 +80,34 @@ function renderList(recipes) {
 
   listEl.innerHTML = recipes
     .map((r) => {
-      const ing = (r.ingredients || []).slice(0, 4).join(", ");
+      const desc = (r.description || "").trim();
+      const shortDesc = desc ? desc : "No description yet.";
+      const ingPreview = (r.ingredients || []).slice(0, 5).join(", ");
+      const ingText = ingPreview ? ingPreview + ((r.ingredients || []).length > 5 ? "..." : "") : "No ingredients listed.";
+      const stepsCount = (r.steps || []).length;
+
       return `
-        <div class="border rounded p-3 mb-3 bg-white">
-          <div class="d-flex justify-content-between gap-2">
-            <div>
-              <h6 class="mb-1">${escapeHtml(r.title)}</h6>
-              <div class="text-muted small">${escapeHtml(r.description || "")}</div>
-              <div class="small mt-2"><b>Ingredients:</b> ${escapeHtml(ing)}${(r.ingredients||[]).length>4 ? "..." : ""}</div>
-              <div class="small"><b>Cook time:</b> ${Number(r.cookTime || 0)} min</div>
+        <div class="rb-list-card" role="button" onclick="viewRecipe('${r._id}')">
+          <div class="d-flex justify-content-between gap-3">
+            <div style="min-width:0;">
+              <div class="d-flex flex-wrap gap-2 align-items-center mb-1">
+                <h6 class="rb-list-title">${escapeHtml(r.title)}</h6>
+                <span class="rb-chip">⏱ ${Number(r.cookTime || 0)} min</span>
+                <span class="rb-chip">${r.isPublic ? "🌍 Public" : "🔒 Private"}</span>
+              </div>
+
+              <p class="rb-list-desc">${escapeHtml(shortDesc)}</p>
+
+              <div class="rb-mini mt-2">
+                <b>Ingredients:</b> ${escapeHtml(ingText)}
+                · <b>Steps:</b> ${stepsCount}
+              </div>
             </div>
-            <div class="d-flex flex-column gap-2">
-              <button class="btn btn-sm btn-outline-primary" onclick="editRecipe('${r._id}')">Edit</button>
-              <button class="btn btn-sm btn-outline-danger" onclick="deleteRecipe('${r._id}')">Delete</button>
+
+            <div class="d-flex flex-column gap-2" onclick="event.stopPropagation()">
+              <button class="btn btn-sm btn-outline-light rb-btn" onclick="viewRecipe('${r._id}')">View</button>
+              <button class="btn btn-sm btn-outline-primary rb-btn" onclick="editRecipe('${r._id}')">Edit</button>
+              <button class="btn btn-sm btn-outline-danger rb-btn" onclick="deleteRecipe('${r._id}')">Delete</button>
             </div>
           </div>
         </div>
@@ -100,6 +115,7 @@ function renderList(recipes) {
     })
     .join("");
 }
+
 
 function escapeHtml(str) {
   return String(str)
@@ -202,6 +218,57 @@ window.editRecipe = async function editRecipe(id) {
     setMsg("Network error");
   }
 };
+
+window.viewRecipe = async function viewRecipe(id) {
+  setMsg("");
+
+  try {
+    const res = await fetch(`/recipes/${id}`, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setMsg(data.message || "Failed to load recipe");
+      return;
+    }
+
+    const r = data.recipe;
+
+    document.getElementById("viewTitle").textContent = r.title || "Recipe";
+    document.getElementById("viewTime").textContent = `⏱ ${Number(r.cookTime || 0)} min`;
+    document.getElementById("viewPublic").textContent = r.isPublic ? "🌍 Public" : "🔒 Private";
+
+    document.getElementById("viewDesc").textContent =
+      (r.description && r.description.trim()) ? r.description : "No description.";
+
+    const ingUl = document.getElementById("viewIngredients");
+    ingUl.innerHTML = (r.ingredients || []).length
+      ? (r.ingredients || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")
+      : `<li class="rb-muted">No ingredients.</li>`;
+
+    const stepsOl = document.getElementById("viewSteps");
+    stepsOl.innerHTML = (r.steps || []).length
+      ? (r.steps || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")
+      : `<li class="rb-muted">No steps.</li>`;
+
+    // Edit button inside modal
+    const editBtn = document.getElementById("viewEditBtn");
+    editBtn.onclick = () => {
+      const modalEl = document.getElementById("viewModal");
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+      editRecipe(id);
+    };
+
+    // show modal
+    const modal = new bootstrap.Modal(document.getElementById("viewModal"));
+    modal.show();
+  } catch (e) {
+    setMsg("Network error");
+  }
+};
+
 
 resetForm();
 loadRecipes();
