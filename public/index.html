@@ -1,27 +1,118 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Recipes App</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>RecipeBook</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/theme.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-  <div class="container py-5" style="max-width: 700px;">
-    <div class="card p-4">
-      <h1 class="h3 mb-3">Recipes App</h1>
-      <p class="text-muted mb-4">Welcome! Please login or create an account.</p>
 
-      <div class="d-flex gap-2">
-        <a class="btn btn-primary w-100" href="login.html">Login</a>
-        <a class="btn btn-success w-100" href="register.html">Register</a>
+<body>
+
+  <nav class="navbar navbar-expand-lg rb-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">🍲 RecipeBook</a>
+
+      <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+
+          <span id="nav-guest" class="d-flex gap-2 align-items-lg-center">
+            <li class="nav-item"><a class="btn btn-outline-light rb-btn ms-lg-2" href="login.html">Login</a></li>
+            <li class="nav-item"><a class="btn btn-primary rb-btn rb-btn-primary ms-lg-2" href="register.html">Register</a></li>
+          </span>
+
+          <span id="nav-auth" class="d-flex gap-2 align-items-lg-center d-none">
+            <li class="nav-item"><a class="nav-link" href="recipes.html">My Recipes</a></li>
+            <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+            <li class="nav-item">
+              <button class="btn btn-outline-light rb-btn ms-lg-2" id="logoutBtn" type="button">Logout</button>
+            </li>
+          </span>
+        </ul>
       </div>
     </div>
-  </div>
+  </nav>
 
-  <script>
-    const token = localStorage.getItem("token");
-    if (token) window.location.href = "recipes.html";
-  </script>
+  <header class="rb-hero">
+    <div class="container py-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+          <h1 class="display-4 rb-hero-title">
+            STORE YOUR RECIPES<br/>IN ONE PLACE
+          </h1>
+
+          <div class="d-flex gap-2 mt-4">
+            <a class="btn btn-primary rb-btn rb-btn-primary" href="recipes.html">Go to My Recipes</a>
+            <a class="btn btn-outline-light rb-btn" href="login.html">Get Started</a>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="rb-panel">
+            <h5 class="mb-3">IN THE NEWS</h5>
+
+            <div class="quote">
+              “Recipe write-ups offer a great way to keep your best dishes organized and easy to share.”
+            </div>
+            <div class="source mb-4">— THE FOOD HUB</div>
+
+            <div class="quote">
+              “Save ingredients, steps and cooking time — everything in one clean app.”
+            </div>
+            <div class="source mb-4">— ONLINE CUPBOARD</div>
+
+            <div class="quote mb-0">
+              “A simple recipe manager makes cooking faster and less stressful.”
+            </div>
+            <div class="source">— EAT THE WORLD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="rb-section py-5">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card rb-card h-100">
+            <div class="card-body">
+              <h6 class="fw-bold">Fast</h6>
+              <div class="rb-muted">Quick create and manage recipes.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card rb-card h-100">
+            <div class="card-body">
+              <h6 class="fw-bold">Secure</h6>
+              <div class="rb-muted">JWT auth + password hashing.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card rb-card h-100">
+            <div class="card-body">
+              <h6 class="fw-bold">Clean UI</h6>
+              <div class="rb-muted">Bootstrap responsive layout.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-5 rb-muted small">
+        © RecipeBook — Final Project
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/navbar.js"></script>
 </body>
 </html>
