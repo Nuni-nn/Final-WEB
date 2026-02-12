@@ -71,6 +71,8 @@ Base URL: `http://localhost:3000`
 
 ### Auth (public)
 
+- `POST /register` (alias)
+- `POST /login` (alias)
 - `POST /auth/register`
   - body: `{ "username": "name", "email": "user@mail.com", "password": "secret123" }`
 - `POST /auth/login`

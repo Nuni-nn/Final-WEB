@@ -13,7 +13,8 @@ exports.getProfile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { username, email } = req.body;
+    const { username } = req.body;
+    const email = req.body.email ? String(req.body.email).trim().toLowerCase() : undefined;
 
     if (email) {
       const existing = await User.findOne({ email, _id: { $ne: req.user.id } });
@@ -22,7 +23,10 @@ exports.updateProfile = async (req, res, next) => {
 
     const updated = await User.findByIdAndUpdate(
       req.user.id,
-      { ...(username ? { username } : {}), ...(email ? { email } : {}) },
+      {
+        ...(username ? { username: String(username).trim() } : {}),
+        ...(email ? { email } : {}),
+      },
       { new: true, runValidators: true }
     ).select("username email role createdAt");
 

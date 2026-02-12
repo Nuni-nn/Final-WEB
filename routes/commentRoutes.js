@@ -3,6 +3,7 @@ const Joi = require("joi");
 
 const auth = require("../middleware/authMiddleware");
 const validate = require("../middleware/validate");
+const validateObjectId = require("../middleware/validateObjectId");
 const commentCtrl = require("../controllers/commentController");
 
 const router = express.Router();
@@ -19,8 +20,8 @@ const updateCommentSchema = Joi.object({
 }).min(1);
 
 router.post("/", auth, validate(createCommentSchema), commentCtrl.createComment);
-router.get("/recipe/:recipeId", auth, commentCtrl.getCommentsByRecipe);
-router.put("/:id", auth, validate(updateCommentSchema), commentCtrl.updateComment);
-router.delete("/:id", auth, commentCtrl.deleteComment);
+router.get("/recipe/:recipeId", auth, validateObjectId("recipeId"), commentCtrl.getCommentsByRecipe);
+router.put("/:id", auth, validateObjectId("id"), validate(updateCommentSchema), commentCtrl.updateComment);
+router.delete("/:id", auth, validateObjectId("id"), commentCtrl.deleteComment);
 
 module.exports = router;

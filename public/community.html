@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community Recipes | RecipeBook</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/theme.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg rb-navbar">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">RecipeBook</a>
+
+      <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="community.html">Community</a></li>
+
+          <span id="nav-guest" class="d-flex gap-2 align-items-lg-center">
+            <li class="nav-item"><a class="btn btn-outline-light rb-btn ms-lg-2" href="login.html">Login</a></li>
+            <li class="nav-item"><a class="btn btn-primary rb-btn rb-btn-primary ms-lg-2" href="register.html">Register</a></li>
+          </span>
+
+          <span id="nav-auth" class="d-flex gap-2 align-items-lg-center d-none">
+            <li class="nav-item"><a class="nav-link" href="recipes.html">My Recipes</a></li>
+            <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+            <li class="nav-item d-none" data-admin-only><a class="nav-link" href="admin.html">Admin</a></li>
+            <li class="nav-item">
+              <button class="btn btn-outline-light rb-btn ms-lg-2" id="logoutBtn" type="button">Logout</button>
+            </li>
+          </span>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="rb-community-hero">
+    <div class="container">
+      <h1 class="display-6 rb-hero-title mb-2">COMMUNITY RECIPES</h1>
+      <p class="rb-hero-sub mb-0">Public recipes from other users.</p>
+    </div>
+  </header>
+
+  <main class="container py-5">
+    <div class="card rb-card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold m-0">Latest shared recipes</h5>
+          <span class="rb-mini">Public only</span>
+        </div>
+
+        <div class="rb-divider"></div>
+
+        <div id="communityMsg" class="small mb-3"></div>
+        <div id="communityList" class="rb-community-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal fade" id="communityViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content" style="background: rgba(20,20,20,0.96); color: rgba(255,255,255,0.92); border: 1px solid rgba(255,255,255,0.12);">
+        <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.10);">
+          <h5 class="modal-title" id="communityViewTitle">Recipe</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="rb-chip" id="communityViewTime"></span>
+            <span class="rb-chip" id="communityViewAuthor"></span>
+          </div>
+
+          <p class="rb-muted" id="communityViewDesc"></p>
+
+          <h6 class="fw-bold mt-3">Ingredients</h6>
+          <ul id="communityViewIngredients" class="mb-0"></ul>
+
+          <h6 class="fw-bold mt-4">Steps</h6>
+          <ol id="communityViewSteps" class="mb-0"></ol>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.10);">
+          <button class="btn btn-outline-light rb-btn" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/navbar.js"></script>
+  <script src="js/community.js"></script>
+</body>
+</html>

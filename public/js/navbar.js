@@ -20,6 +20,25 @@ function renderNavbar() {
     });
   }
 
+  document.querySelectorAll("[data-admin-only]").forEach((el) => {
+    el.classList.add("d-none");
+  });
+
+  if (token) {
+    fetch("/users/profile", {
+      headers: { Authorization: "Bearer " + token },
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.user?.role === "admin") {
+          document.querySelectorAll("[data-admin-only]").forEach((el) => {
+            el.classList.remove("d-none");
+          });
+        }
+      })
+      .catch(() => {});
+  }
+
   const current = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav-link, .btn").forEach((a) => {
     const href = a.getAttribute("href");
