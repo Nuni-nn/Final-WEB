@@ -2,6 +2,7 @@ const token = localStorage.getItem("token");
 if (!token) window.location.href = "login.html";
 
 const listEl = document.getElementById("adminList");
+const usersListEl = document.getElementById("usersList");
 const msgEl = document.getElementById("msg");
 const formTitleEl = document.getElementById("adminFormTitle");
 const editIdEl = document.getElementById("adminEditId");
@@ -80,6 +81,26 @@ async function loadAllRecipes() {
   }
 }
 
+async function loadUsers() {
+  usersListEl.innerHTML = "Loading...";
+  try {
+    const res = await fetch("/users", {
+      headers: { Authorization: "Bearer " + token },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      usersListEl.innerHTML = "";
+      setMsg(data.message || "Failed to load users");
+      return;
+    }
+
+    renderUsers(data.users || []);
+  } catch (err) {
+    usersListEl.innerHTML = "";
+    setMsg("Network error");
+  }
+}
+
 function renderList(recipes) {
   if (!recipes.length) {
     listEl.innerHTML = `<div class="rb-muted">No recipes found.</div>`;
@@ -105,6 +126,43 @@ function renderList(recipes) {
       </div>
     `;
   }).join("");
+}
+
+function renderUsers(users) {
+  if (!users.length) {
+    usersListEl.innerHTML = `<div class="rb-muted">No users found.</div>`;
+    return;
+  }
+
+  usersListEl.innerHTML = users.map((u) => {
+    const isSelf = u._id === getMyIdFromToken();
+    return `
+      <div class="rb-list-card">
+        <div class="d-flex justify-content-between align-items-start gap-2">
+          <div style="min-width:0;">
+            <h6 class="rb-list-title">${escapeHtml(u.username || "Unknown")}</h6>
+            <div class="rb-mini">Email: ${escapeHtml(u.email || "no-email")}</div>
+            <div class="rb-mini">Role: ${escapeHtml(u.role || "user")}</div>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-outline-danger rb-btn" onclick="adminDeleteUser('${u._id}')" ${isSelf ? "disabled" : ""}>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function getMyIdFromToken() {
+  try {
+    const [, payload] = token.split(".");
+    const decoded = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+    return decoded?.id || null;
+  } catch (err) {
+    return null;
+  }
 }
 
 window.adminEditRecipe = async function adminEditRecipe(id) {
@@ -150,6 +208,29 @@ window.adminDeleteRecipe = async function adminDeleteRecipe(id) {
       return;
     }
     setMsg("Deleted", true);
+    loadAllRecipes();
+  } catch (err) {
+    setMsg("Network error");
+  }
+};
+
+window.adminDeleteUser = async function adminDeleteUser(id) {
+  if (!confirm("Delete this user and related data?")) return;
+  setMsg("");
+
+  try {
+    const res = await fetch(`/users/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer " + token },
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setMsg(data.message || "Delete failed");
+      return;
+    }
+
+    setMsg("User deleted", true);
+    loadUsers();
     loadAllRecipes();
   } catch (err) {
     setMsg("Network error");
@@ -210,4 +291,5 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   await ensureAdmin();
   resetForm();
   loadAllRecipes();
+  loadUsers();
 })();

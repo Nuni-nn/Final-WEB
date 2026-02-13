@@ -84,6 +84,8 @@ Base URL: `http://localhost:3000`
 - `GET /users/profile`
 - `PUT /users/profile`
   - body: `{ "username": "newName", "email": "new@mail.com" }`
+- `GET /users` (admin)
+- `DELETE /users/:id` (admin)
 
 ### Recipes (private)
 
