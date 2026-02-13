@@ -58,6 +58,14 @@
           </div>
 
           <div class="mb-3">
+            <label class="form-label rb-label">Category</label>
+            <select id="categoryId" class="form-select rb-input">
+              <option value="">No category</option>
+            </select>
+            <input id="recipeCategoryName" class="form-control rb-input mt-2" placeholder="Or type a new category">
+          </div>
+
+          <div class="mb-3">
             <label class="form-label rb-label">Ingredients (one per line)</label>
             <textarea id="ingredients" class="form-control rb-input" rows="4" placeholder="Eggs&#10;Cheese&#10;Pasta"></textarea>
           </div>
@@ -109,6 +117,32 @@
             </div>
             <div class="rb-divider"></div>
             <div id="usersList"></div>
+          </div>
+        </div>
+
+        <div class="card rb-card border-0 shadow-sm mt-4">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h5 class="fw-bold m-0">Categories</h5>
+              <span class="rb-mini">Admin manage</span>
+            </div>
+            <div class="rb-divider"></div>
+
+            <input type="hidden" id="categoryEditId" />
+            <div class="row g-2 mt-2">
+              <div class="col-md-4">
+                <input id="categoryName" class="form-control rb-input" placeholder="Category name">
+              </div>
+              <div class="col-md-5">
+                <input id="categoryDescription" class="form-control rb-input" placeholder="Description (optional)">
+              </div>
+              <div class="col-md-3 d-flex gap-2">
+                <button id="saveCategoryBtn" class="btn btn-primary rb-btn rb-btn-primary w-100" type="button">Save</button>
+                <button id="cancelCategoryBtn" class="btn btn-outline-light rb-btn w-100" type="button" style="display:none;">Cancel</button>
+              </div>
+            </div>
+
+            <div id="categoriesList" class="mt-3"></div>
           </div>
         </div>
       </div>

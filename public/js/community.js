@@ -1,6 +1,9 @@
 const listEl = document.getElementById("communityList");
 const msgEl = document.getElementById("communityMsg");
 const token = localStorage.getItem("token");
+const categoryFilterEl = document.getElementById("communityCategoryFilter");
+
+let allCommunityRecipes = [];
 let communityRecipes = [];
 let activeRecipeId = null;
 const favoriteRecipeIds = new Set();
@@ -53,6 +56,34 @@ async function getCurrentUserId() {
   }
 }
 
+function getCategoryName(recipe) {
+  return recipe?.categoryId?.name || "No category";
+}
+
+function renderCategoryFilterOptions(recipes) {
+  const unique = new Map();
+  recipes.forEach((r) => {
+    const id = r?.categoryId?._id;
+    const name = r?.categoryId?.name;
+    if (id && name) unique.set(id, name);
+  });
+
+  const options = [...unique.entries()]
+    .sort((a, b) => a[1].localeCompare(b[1]))
+    .map(([id, name]) => `<option value="${id}">${escapeHtml(name)}</option>`)
+    .join("");
+
+  categoryFilterEl.innerHTML = `<option value="">All categories</option>${options}`;
+}
+
+function applyCategoryFilter() {
+  const selected = categoryFilterEl.value;
+  communityRecipes = selected
+    ? allCommunityRecipes.filter((r) => r?.categoryId?._id === selected)
+    : [...allCommunityRecipes];
+  renderList(communityRecipes);
+}
+
 function renderList(recipes) {
   if (!recipes.length) {
     listEl.innerHTML = `<div class="rb-muted">No public recipes from other users yet.</div>`;
@@ -68,6 +99,7 @@ function renderList(recipes) {
       const ingPreview = ingredients.slice(0, 6).join(", ");
       const ingText = ingPreview ? ingPreview + (ingredients.length > 6 ? "..." : "") : "No ingredients listed.";
       const isFavorite = favoriteRecipeIds.has(r._id);
+      const categoryName = getCategoryName(r);
 
       return `
         <div class="rb-list-card">
@@ -80,7 +112,8 @@ function renderList(recipes) {
           <p class="rb-list-desc mt-2">${escapeHtml(description)}</p>
 
           <div class="rb-mini mt-2">
-            <b>Ingredients:</b> ${escapeHtml(ingText)}
+            <b>Category:</b> ${escapeHtml(categoryName)}
+            | <b>Ingredients:</b> ${escapeHtml(ingText)}
             | <b>Steps:</b> ${steps.length}
             ${isFavorite ? '| <b>Favorite</b>' : ""}
           </div>
@@ -246,7 +279,7 @@ window.toggleFavoriteFromList = function toggleFavoriteFromList(recipeId) {
 };
 
 window.viewCommunityRecipe = function viewCommunityRecipe(id) {
-  const recipe = communityRecipes.find((x) => x._id === id);
+  const recipe = allCommunityRecipes.find((x) => x._id === id);
   if (!recipe) return;
   activeRecipeId = id;
 
@@ -257,6 +290,7 @@ window.viewCommunityRecipe = function viewCommunityRecipe(id) {
   document.getElementById("communityViewTitle").textContent = recipe.title || "Recipe";
   document.getElementById("communityViewTime").textContent = `${Number(recipe.cookTime || 0)} min`;
   document.getElementById("communityViewAuthor").textContent = `By: ${author}`;
+  document.getElementById("communityViewCategory").textContent = `Category: ${getCategoryName(recipe)}`;
   document.getElementById("communityViewDesc").textContent =
     (recipe.description && recipe.description.trim()) ? recipe.description : "No description.";
 
@@ -330,6 +364,10 @@ if (commentFormEl) {
   });
 }
 
+if (categoryFilterEl) {
+  categoryFilterEl.addEventListener("change", applyCategoryFilter);
+}
+
 async function loadCommunityRecipes() {
   listEl.innerHTML = "Loading...";
   setMsg("");
@@ -348,11 +386,12 @@ async function loadCommunityRecipes() {
     }
 
     const all = Array.isArray(data.recipes) ? data.recipes : [];
-    const filtered = myId ? all.filter((r) => normalizeUserId(r) !== myId) : all;
-    communityRecipes = filtered;
+    allCommunityRecipes = myId ? all.filter((r) => normalizeUserId(r) !== myId) : all;
     await loadFavorites();
 
-    renderList(filtered);
+    renderCategoryFilterOptions(allCommunityRecipes);
+    applyCategoryFilter();
+
     if (token && !favoritesLoaded) {
       setMsg("Favorites are temporarily unavailable.");
     }

@@ -17,6 +17,7 @@ const recipeCreateSchema = Joi.object({
   cookTime: Joi.number().integer().min(0).max(10000).optional(),
   isPublic: Joi.boolean().optional(),
   categoryId: Joi.string().hex().length(24).allow(null).optional(),
+  categoryName: Joi.string().trim().min(2).max(80).allow("", null).optional(),
 });
 
 const recipeUpdateSchema = Joi.object({
@@ -27,6 +28,7 @@ const recipeUpdateSchema = Joi.object({
   cookTime: Joi.number().integer().min(0).max(10000).optional(),
   isPublic: Joi.boolean().optional(),
   categoryId: Joi.string().hex().length(24).allow(null).optional(),
+  categoryName: Joi.string().trim().min(2).max(80).allow("", null).optional(),
 }).min(1);
 
 const adminRecipeCreateSchema = Joi.object({
@@ -37,6 +39,7 @@ const adminRecipeCreateSchema = Joi.object({
   cookTime: Joi.number().integer().min(0).max(10000).optional(),
   isPublic: Joi.boolean().optional(),
   categoryId: Joi.string().hex().length(24).allow(null).optional(),
+  categoryName: Joi.string().trim().min(2).max(80).allow("", null).optional(),
   userId: Joi.string().hex().length(24).optional(),
 });
 
@@ -48,6 +51,7 @@ const adminRecipeUpdateSchema = Joi.object({
   cookTime: Joi.number().integer().min(0).max(10000).optional(),
   isPublic: Joi.boolean().optional(),
   categoryId: Joi.string().hex().length(24).allow(null).optional(),
+  categoryName: Joi.string().trim().min(2).max(80).allow("", null).optional(),
   userId: Joi.string().hex().length(24).optional(),
 }).min(1);
 

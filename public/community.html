@@ -51,7 +51,12 @@
       <div class="card-body p-4">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="fw-bold m-0">Latest shared recipes</h5>
-          <span class="rb-mini">Public only</span>
+          <div class="d-flex align-items-center gap-2">
+            <select id="communityCategoryFilter" class="form-select rb-input form-select-sm" style="min-width: 210px;">
+              <option value="">All categories</option>
+            </select>
+            <span class="rb-mini">Public only</span>
+          </div>
         </div>
 
         <div class="rb-divider"></div>
@@ -73,6 +78,7 @@
           <div class="d-flex flex-wrap gap-2 mb-3">
             <span class="rb-chip" id="communityViewTime"></span>
             <span class="rb-chip" id="communityViewAuthor"></span>
+            <span class="rb-chip" id="communityViewCategory"></span>
           </div>
 
           <p class="rb-muted" id="communityViewDesc"></p>

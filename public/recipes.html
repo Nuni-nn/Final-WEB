@@ -74,6 +74,14 @@
           </div>
 
           <div class="mb-3">
+            <label class="form-label rb-label">Category</label>
+            <select id="categoryId" class="form-select rb-input">
+              <option value="">No category</option>
+            </select>
+            <input id="categoryName" class="form-control rb-input mt-2" placeholder="Or type a new category">
+          </div>
+
+          <div class="mb-3">
             <label class="form-label rb-label">Ingredients (one per line)</label>
             <textarea id="ingredients" class="form-control rb-input" rows="4" placeholder="Eggs&#10;Cheese&#10;Pasta"></textarea>
           </div>
@@ -142,6 +150,7 @@
         <div class="d-flex flex-wrap gap-2 mb-3">
           <span class="rb-chip" id="viewTime"></span>
           <span class="rb-chip" id="viewPublic"></span>
+          <span class="rb-chip" id="viewCategory"></span>
         </div>
 
         <p class="rb-muted" id="viewDesc"></p>
