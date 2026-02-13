@@ -82,8 +82,45 @@
 
           <h6 class="fw-bold mt-4">Steps</h6>
           <ol id="communityViewSteps" class="mb-0"></ol>
+
+          <h6 class="fw-bold mt-4">Comments</h6>
+          <div id="communityCommentsMsg" class="small mb-2 rb-muted"></div>
+          <div id="communityCommentsList" class="mb-3"></div>
+
+          <form id="communityCommentForm" class="mt-2">
+            <div class="mb-2">
+              <label for="communityCommentText" class="form-label rb-label">Add comment</label>
+              <textarea
+                id="communityCommentText"
+                class="form-control rb-input"
+                rows="3"
+                maxlength="1000"
+                placeholder="Write your comment..."
+              ></textarea>
+            </div>
+
+            <div class="row g-2 align-items-end">
+              <div class="col-sm-4">
+                <label for="communityCommentRating" class="form-label rb-label">Rating (optional)</label>
+                <select id="communityCommentRating" class="form-select rb-input">
+                  <option value="">No rating</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <div class="col-sm-8">
+                <button id="communityCommentSubmit" type="submit" class="btn btn-primary rb-btn rb-btn-primary">
+                  Post comment
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
         <div class="modal-footer" style="border-top: 1px solid rgba(255,255,255,0.10);">
+          <button class="btn btn-outline-primary rb-btn" id="communityFavoriteBtn" type="button">Add to favorites</button>
           <button class="btn btn-outline-light rb-btn" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
