@@ -58,7 +58,7 @@ body{
 }
 
 .rb-panel{
-  background: rgba(111, 29, 59, 0.92); /* wine */
+  background: rgba(111, 29, 59, 0.92);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 14px;
   padding: 28px;

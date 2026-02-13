@@ -26,7 +26,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
-app.use("/", authRoutes);
 app.use("/users", userRoutes);
 app.use("/recipes", recipeRoutes);
 app.use("/categories", categoryRoutes);
